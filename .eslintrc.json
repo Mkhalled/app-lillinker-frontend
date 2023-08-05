@@ -1,9 +1,21 @@
 {
-  "extends": "next/core-web-vitals",
+  // "extends": "next/core-web-vitals",
   "globals": {
     "React": "readonly"
   },
   "rules": {
     "no-unused-vars": [1, { "args": "after-used", "argsIgnorePattern": "^_" }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.stories.@(ts|tsx|js|jsx|mjs|cjs)"],
+      "rules": {
+        // example of overriding a rule
+        "storybook/hierarchy-separator": "error",
+        "storybook/default-exports": "off",
+        "import/no-extraneous-dependencies": "off"
+      }
+    }
+  ],
+  "extends": ["next/core-web-vitals", "plugin:storybook/recommended"]
 }
