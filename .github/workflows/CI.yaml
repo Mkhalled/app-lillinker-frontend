@@ -1,0 +1,24 @@
+# ci.yml
+
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node & Install dependencies
+        uses: ./.github/workflows/common-CI-CD-steps
+
+      - run: pnpm lint
