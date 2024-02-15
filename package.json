@@ -56,7 +56,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.0.1",
     "storybook": "^7.2.1",
-    "ts-jest": "^29.1.2"
+    "ts-jest": "^29.1.2",
+    "vercel": "^33.5.1"
   },
   "resolutions": {
     "webpack": "^5"
