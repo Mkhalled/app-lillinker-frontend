@@ -10,7 +10,7 @@ const logger = winston.createLogger({
   format: combine(timestamp(), myFormat),
   transports: [
     new winston.transports.File({
-      filename: 'app-lillinker-frontend.log',
+      filename: './logs/app-lillinker-frontend.log',
     }),
   ],
 });

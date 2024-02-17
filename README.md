@@ -1,334 +1,143 @@
 ## lillinker App Frontend
 
--# Description
+## Table of Contents
 
-- [ ] **all project developers must use the same node engine and package manager.** We'll create two new files in the project root for this purpose.
-  - .nvmrc - Inform other project users of the Node version used.
-  - .pnpmrc - Inform other project users of the package manager used.
-    ```jsx
-    {
-      "name": "nextjs-app-template",
-      "version": "0.1.0",
-      "private": true,
-      "engines": {
-        "node": ">=18.0.0",
-        "pnpm": ">=8.5.1",
-        "yarn": "please-use-pnpm"
-      },
-    ```
+- [Lillinker](#Lillinker)
+  - [Installation](#installation)
+    - [Minimum requirements](#minimum-requirements)
+    - [Install the application locally](#install-the-application-locally)
+- [Development](#development)
+  - [Git workflow](#git-workflow)
+  - [Coding conventions](#coding-conventions)
+- [Architectures](#architectures)
+  - [Frontend architecture](#frontend-architecture)
 
-## **Configuring Git**
+## Lillinker
 
-- [ ] **Git Hooks : Husky** is a tool that allows you to execute scripts at various key stages of the Git lifecycle, such as add, commit, push, etc.
-  - [ ] Install Husky
-  ```jsx
-  pnpm add -D husky
-  pnpm husky install // this command will generate a .husk folder in your project.
-                     // This folder will be the home of your hooks.
-  ```
-  - [ ] add a new script to the **package.json** file
-  ```jsx
-  ...
-    "scripts: {
-      ...
-      "prepare": "husky install"
-    }
-  ```
-  - [ ] create the first hook
-  ```jsx
-  pnpm husky add .husky/pre-commit "pnpm lint"
-  // This hook will be automatically executed before each commit. The pnpm lint command
-  // If the lint script encounters any errors, you won't be able to commit until these have been resolved.
-  ```
-  - [ ] create the second hook
-  ```jsx
-  pnpm husky add .husky/pre-push "pnpm build"
-  // This hook ensures that we are not allowed to push our code
-  // to the remote repository unless the build is successful.
-  ```
-- [ ] Add a linter for our commit messages
-  ```jsx
-  pnpm add -D @commitlint/config-conventional @commitlint/cli
-  ```
-- [ ] Create the **commitlint.config.js** file at the project root.
+![](./docs/logo.png)
+💡 **Lillinker :** Locate. Link. Launch. 🚀
 
-```jsx
-// build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-// ci: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-// docs: Documentation only changes
-// feat: A new feature
-// fix: A bug fix
-// perf: A code change that improves performance
-// refactor: A code change that neither fixes a bug nor adds a feature
-// style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-// test: Adding missing tests or correcting existing tests
+Lillinker addresses the challenges faced by independent workers when searching for a suitable umbrella company. The platform aims to make this process transparent and informative by connecting independents with multiple umbrella companies through a single channel. This enables them to receive multiple simulations and proposals in one place, while also providing the opportunity to explore the experiences and reviews of other independents who have worked with these companies.
+
+✨ What the Platform Offers
+
+💼 Multiple Options, One Channel: Simplify your search for umbrella companies by receiving simulations and proposals from multiple companies through the platform.
+
+📊 Total Transparency: Compare offers with clear information on management fees and the reputation of each umbrella company.
+
+🌐 Engaged Community: Join a community of passionate independent workers to share advice and experiences.
+
+🗣️ Reviews and Experiences: Discover testimonials and reviews from other independents to make informed decisions.
+
+🛠️ Optimization Tools: Maximize your success with resources and professional optimization tools available on the platform.
+
+The platform aims to provide a user-friendly and transparent experience, allowing independent workers to navigate easily through the process of searching and selecting umbrella companies, while benefiting from a collaborative community and useful tools for their professional development.
+
+## Installation
+
+### Minimum requirements
+
+- [NodeJS](https://nodejs.org/en/) (You can use [nvm](https://github.com/nvm-sh/nvm))
+- [pnpm](https://pnpm.io/fr/installation)
+
+The version requirements are listed in `engines` key of the [package.json file](package.json).
+
+### Install the application locally
+
+- Run `git clone git@github.com:Mkhalled/app-lillinker-frontend.git` to clone the repository
+- Run `cd app-lillinker-frontend` to navigate to the code folder
+- Run `pnpm` to install node dependencies
+- Run `cp .env.example .env` to create the required environment variables.
+- Run `pnpm run dev` to start the application on the 3000 port
+
+## Development
+
+### Git workflow
+
+Commits should be formatted using the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention.
+
+- **build:** Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+- **ci:** Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+- **docs:** Documentation only changes
+- **feat:** A new feature
+- **fix:** A bug fix
+- **perf:** A code change that improves performance
+- **refactor:** A code change that neither fixes a bug nor adds a feature
+- **style:** Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- **test:** Adding missing tests or correcting existing tests
+
+```json
+// config-conventional
 
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
-  rules: {
-    'body-leading-blank': [1, 'always'],
-    'body-max-line-length': [2, 'always', 100],
-    'footer-leading-blank': [1, 'always'],
-    'footer-max-line-length': [2, 'always', 100],
-    'header-max-length': [2, 'always', 100],
-    'scope-case': [2, 'always', 'lower-case'],
-    'subject-case': [
-      2,
-      'never',
-      ['sentence-case', 'start-case', 'pascal-case', 'upper-case'],
-    ],
-    'subject-empty': [2, 'never'],
-    'subject-full-stop': [2, 'never', '.'],
-    'type-case': [2, 'always', 'lower-case'],
-    'type-empty': [2, 'never'],
-    'type-enum': [
-      2,
-      'always',
-      [
-        'build',
-        'chore',
-        'ci',
-        'docs',
-        'feat',
-        'fix',
-        'perf',
-        'refactor',
-        'revert',
-        'style',
-        'test',
-        'translation',
-        'security',
-        'changeset',
+    extends: ['@commitlint/config-conventional'],
+    rules: {
+      'body-leading-blank': [1, 'always'],
+      'body-max-line-length': [2, 'always', 100],
+      'footer-leading-blank': [1, 'always'],
+      'footer-max-line-length': [2, 'always', 100],
+      'header-max-length': [2, 'always', 100],
+      'scope-case': [2, 'always', 'lower-case'],
+      'subject-case': [
+        2,
+        'never',
+        ['sentence-case', 'start-case', 'pascal-case', 'upper-case'],
       ],
-    ],
-  },
-};
-```
-
-- [ ] Active `commitlint` with `husky`
-
-```jsx
-pnpm husky add .husky/commit-msg 'npx --no -- commitlint --edit "$1"'
-```
-
-## **Formatting and Code Quality Tools**
-
-- [ ] **ESLint-** an analysis tool to help maintain code quality.
-  - [ ] Create an **eslintrc.json** file at the root of project.
-  ```jsx
-  {
-    "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
-    "globals": {
-      "React": "readonly"
+      'subject-empty': [2, 'never'],
+      'subject-full-stop': [2, 'never', '.'],
+      'type-case': [2, 'always', 'lower-case'],
+      'type-empty': [2, 'never'],
+      'type-enum': [
+        2,
+        'always',
+        [
+          'build',
+          'chore',
+          'ci',
+          'docs',
+          'feat',
+          'fix',
+          'perf',
+          'refactor',
+          'revert',
+          'style',
+          'test',
+          'translation',
+          'security',
+          'changeset',
+        ],
+      ],
     },
-    "rules": {
-      "no-unused-vars": [1, { "args": "after-used", "argsIgnorePattern": "^_" }]
-    }
-  }
-  ```
-  - [ ] Test the new conf with the command: **pnpm lint**
-- [ ] **Prettier-** a code formatter who guarantees the coherence and style of your code.
-  - [ ] Add Prettier to the project.
-  ```jsx
-  pnpm add -D prettier
-  ```
-  - [ ] Install the Prettier extension in VScode
-  - [ ] Create the **.prettierrc** file at the project root.
-  ```jsx
-  {
-    "trailingComma": "es5",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true
-  }
-  ```
-  - [ ] Create the .prettierignore file at the project root
-  ```jsx
-  .pnpm
-  .next
-  dist
-  node_modules
-  ```
-  - [ ] add a new script to the **package.json** file
-  ```jsx
-  ...
-    "scripts: {
-      ...
-      "prettier": "prettier --write ."
-    }
-  ```
-  - [ ] Test the new conf with the command: **pnpm prettier**
-
-## **Configuration de VS code**
-
-- [ ] create a root folder with the name **.vscode**
-- [ ] inside **.vscode,** create a **settings.json** (containing values that will replace some of VS Code's default settings.)
-- [ ] added in **settings.json**
-
-```jsx
-{
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.organizeImports": true
-  }
-}
+  };
 ```
 
-**Debugging**
+The project has 2 main branches:
 
-- [ ] add a second **launch.json** file to the .vscode folder
+- dev
+- main
 
-```jsx
-{
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Next.js: debug server-side",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "pnpm run dev"
-      },
-      {
-        "name": "Next.js: debug client-side",
-        "type": "chrome",
-        "request": "launch",
-        "url": "http://localhost:3000"
-      },
-      {
-        "name": "Next.js: debug full stack",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "pnpm run dev",
-        "serverReadyAction": {
-          "pattern": "started server on .+, url: (https?://.+)",
-          "uriFormat": "%s",
-          "action": "debugWithChrome"
-        }
-      }
-    ]
-  }
-```
+Each of them is synchronised with the corresponding environment (See [Continuous Delivery](#continuous-delivery) for more details).
 
-- [ ] install **cross-env** to define environment variables
-  ```jsx
-  pnpm add -D cross-env
-  ```
-- [ ] update our **package.json** devscript to look like this
+The project uses the following git flow:
 
-```jsx
-{
-  ...
-  "scripts": {
-    ...
-    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-  },
-}
-```
+![](./docs/git-Flow.png)
 
-## **Storybook**
+When starting a new feature, create a new branch `feature/short-description-of-the-feature` from the `dev` branch. When development is over, open a pull request on `dev` branch and ask other developers to review the code. When the code review is done, your branch can then be merged (manually or with a pull request) into `dev` branch for validation purpose. Note that merging into `dev`, `Main` will build and deploy automatically. Nothing more than merging is needed to deploy the frontend. When the feature is approved by the PO in `dev`, it's possible to merge the pull request in `Main` to deploy in production.
 
-- [ ] install storybook
+### Coding conventions
 
-```jsx
-pnpm dlx storybook@latest init
-```
+The coding conventions and style are enforced by the [eslint](https://eslint.org) linter, the [prettier](https://prettier.io/) formatter. The configuration can be found in the [.eslintrc](./.eslintrc.json) file, and the [.prettierrc](./.prettierrc) file. Your IDE should be configured to use those configurations.
 
-- [ ] configurer manuellement la notification eslintPlugin : Open it **.eslintrc.json** and update it by adding the following
+To check linting error in command line, run `pnpm lint`.
 
-```jsx
-"overrides": [
-    {
-      "files": ["*.stories.@(ts|tsx|js|jsx|mjs|cjs)"],
-      "rules": {
-        // example of overriding a rule
-        "storybook/hierarchy-separator": "error"
-      }
-    }
-  ]
-```
+To fix automatically format errors, run respectively `pnpm lint:fix`.
 
-- [ ] making sure we use webpack5
+Additional conventions and practices can be found on [this Notion doc](https://www.notion.so/Docs-4ed395b2bea54ea8b6c593c46462e016).
 
-```jsx
-{
-  ...
-  "resolutions": {
-    "webpack": "^5"
-  }
-}
-```
+## Architectures
 
-- [ ] Run the **pnpm install** command to verify that webpack5 has been installed
-- [ ] update the .storybook/main.js file
+### Lillinker Project Architecture
 
-```jsx
-import type { StorybookConfig } from '@storybook/nextjs';
-const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  staticDirs: ['../public'],
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-  ],
-  framework: {
-    name: '@storybook/nextjs',
-    options: {},
-  },
-  docs: {
-    autodocs: 'tag',
-  },
-};
-export default config;
-```
+The global lillinker architecture schema is available on [Notion.so](https://www.notion.so/Docs-4ed395b2bea54ea8b6c593c46462e016).
 
-- [ ] dit **storybook/preview** file
-
-```jsx
-import type { Preview } from '@storybook/react';
-
-const BREAKPOINTS_INT = {
-  xs: 375,
-  sm: 600,
-  md: 900,
-  lg: 1200,
-  xl: 1536,
-};
-
-const customViewports = Object.fromEntries(
-  Object.entries(BREAKPOINTS_INT).map(([key, val], idx) => {
-    console.log(val);
-    return [
-      key,
-      {
-        name: key,
-        styles: {
-          width: `${val}px`,
-          height: `${(idx + 5) * 10}vh`,
-        },
-      },
-    ];
-  })
-);
-
-const preview: Preview = {
-  parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/,
-      },
-      viewport: { viewports: customViewports },
-      layout: 'fullscreen',
-    },
-  },
-};
-
-export default preview;
-```
-
-- [ ] lance storyBook **pnpm storybook**
-- [ ] you can access the http://localhost:6006/ interface.
+### Frontend architecture
