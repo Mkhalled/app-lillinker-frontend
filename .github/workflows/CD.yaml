@@ -1,0 +1,60 @@
+name: Continuous Deployment
+
+# Déclencheur du workflow : déclenché à chaque fois qu'un commit est poussé sur la branche main
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: Continuous Deployment
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      # Étape 1: Récupération du code source du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Étape 2: Configuration de l'environnement Node.js et installation des dépendances
+      - name: Setup Node & Install dependencies
+        uses: ./.github/workflows/common-CI-CD-steps
+        # Cette étape configure Node.js et installe les dépendances du projet
+
+      # Étape 3: Vérification de la couverture de code
+      - name: Check coverage
+        run: |
+          # Installer les outils de couverture de code
+          pnpm install --save-dev nyc
+
+          # Exécuter les tests avec la couverture
+          npx nyc pnpm coverage
+
+          # Afficher le rapport de couverture
+          npx nyc report --reporter=lcov
+        # Cette étape vérifie la couverture de code pour garantir que suffisamment de tests sont effectués
+
+      # Étape 4: Construction de l'application Next.js
+      - name: Build Next.js app
+        run: pnpm run build
+        # Cette étape construit l'application Next.js pour la production
+
+      # Étape 5: Déploiement sur l'environnement de production
+      - name: Deploy to production
+        if: success()
+        run: |
+          # Déploiement de l'application sur Vercel
+          pnpm vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+          pnpm vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          # Utilisation du token Vercel pour autoriser le déploiement sur l'environnement de production
+          echo "::set-output name=url::$(pnpm vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})"
+          # Enregistrement de l'URL de déploiement pour référence ultérieure
+
+      - name: Afficher l'URL de déploiement
+        run: |
+          echo "L'URL de déploiement est : $url"

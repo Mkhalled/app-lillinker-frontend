@@ -1,0 +1,34 @@
+name: Continuous Integration
+
+# Déclencheurs du workflow : chaque fois qu'un commit est poussé sur la branche main ou qu'une pull request est ouverte vers main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1: Récupération du code source du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Étape 2: Configuration de l'environnement Node.js et installation des dépendances
+      - name: Setup Node & Install dependencies
+        uses: ./.github/workflows/common-CI-CD-steps
+        # Cette étape configure Node.js et installe les dépendances du projet
+
+      # Étape 3: Linting du code pour vérifier la conformité aux normes de codage
+      - name: Linting
+        run: pnpm lint
+        # Le linting vérifie la qualité du code et détecte les erreurs potentielles
+
+      # Étape 4: Exécution des tests pour valider le bon fonctionnement de l'application
+      - name: Testing
+        run: pnpm test
+        # Les tests garantissent que l'application fonctionne comme prévu
